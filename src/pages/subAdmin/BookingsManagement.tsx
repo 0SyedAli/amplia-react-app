@@ -260,6 +260,7 @@ export default function BookingsManagement() {
                         setSelectedBookingForChat(null)
                     }}
                     bookingId={selectedBookingForChat._id}
+                    userId={selectedBookingForChat.user?._id || ''}
                     bookingDetails={selectedBookingForChat}
                     currentUserId={userId || ''}
                 />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { taxCategoryApi } from '../lib/api'
 import { toast } from 'react-hot-toast'
@@ -31,7 +31,7 @@ export default function TaxSettings() {
     queryFn: () => taxCategoryApi.getAll(),
   });
 
-  const categories = categoriesResponse?.data?.data || [];
+  const categories = useMemo(() => categoriesResponse?.data?.data || [], [categoriesResponse?.data?.data]);
 
   useEffect(() => {
     if (selectedCategoryId) {
@@ -43,8 +43,6 @@ export default function TaxSettings() {
       setBrackets([]);
     }
   }, [selectedCategoryId, categories]);
-
-  if (isLoading) return <div className="p-8 text-center">Loading categories...</div>;
 
   const updateMutation = useMutation({
     mutationFn: (data: { id: string, brackets: TaxBracket[] }) =>
@@ -58,6 +56,8 @@ export default function TaxSettings() {
       toast.error(err.response?.data?.message || 'Failed to update tax brackets')
     },
   });
+
+  if (isLoading) return <div className="p-8 text-center">Loading categories...</div>;
 
   const handleAddBracket = () => {
     const lastBracket = brackets[brackets.length - 1]

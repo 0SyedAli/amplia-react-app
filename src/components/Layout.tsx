@@ -17,7 +17,7 @@ const adminNavItems = [
   { path: '/bookings', label: 'Bookings', icon: '📅' },
   { path: '/ratings', label: 'Ratings', icon: '⭐' },
   { path: '/tax-calculator', label: 'Tax Calculator', icon: '🧮' },
-  { path: '/settings', label: 'Settings', icon: '⚙️' },
+  // { path: '/settings', label: 'Settings', icon: '⚙️' },
 ]
 
 const subAdminNavItems = [

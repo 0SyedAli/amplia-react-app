@@ -71,10 +71,10 @@ export default function Users() {
             className="w-full pl-12 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:bg-white transition-all shadow-sm"
           />
         </div>
-        <button className="btn-primary flex items-center gap-2 px-6">
+        {/* <button className="btn-primary flex items-center gap-2 px-6">
           <span className="text-xl">👤+</span>
           Add User
-        </button>
+        </button> */}
       </div>
 
       {/* User Cards Grid */}

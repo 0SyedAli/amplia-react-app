@@ -7,6 +7,7 @@ interface ChatModalProps {
     isOpen: boolean;
     onClose: () => void;
     bookingId: string;
+    userId: string; // The user (client) ID (Currently unused in component body but required by interface)
     bookingDetails?: any;
     currentUserId: string; // The subAdmins ID
 }
@@ -24,7 +25,7 @@ interface Message {
     seen: boolean;
 }
 
-
+// SOCKET_URL is handled via io() call directly or env
 
 export default function ChatModal({ isOpen, onClose, bookingId, bookingDetails, currentUserId }: ChatModalProps) {
     const [messages, setMessages] = useState<Message[]>([]);
