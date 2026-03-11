@@ -4,7 +4,7 @@ import { chatApi } from '../../lib/api';
 import { io, Socket } from 'socket.io-client';
 import LiveChatModal from '../../components/LiveChatModal';
 
-const API_BASE_URL = "https://apiforapp.link";
+const API_BASE_URL = "https://apiforapp.link/Amplia/";
 
 export default function LiveChatSupport() {
     const [selectedChat, setSelectedChat] = useState<any>(null);
