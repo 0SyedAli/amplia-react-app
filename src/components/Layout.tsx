@@ -9,13 +9,10 @@ interface LayoutProps {
 
 const adminNavItems = [
   { path: '/', label: 'Dashboard', icon: '📊' },
+  { path: '/document-requests', label: 'Document Requests', icon: '📁' },
   { path: '/tax-settings', label: 'Tax Settings', icon: '💰' },
   { path: '/users', label: 'Users', icon: '👥' },
-  { path: '/services', label: 'Services', icon: '🛠️' },
-  { path: '/categories', label: 'Categories', icon: '📁' },
   { path: '/sub-admins', label: 'Sub Admins', icon: '🛡️' },
-  { path: '/bookings', label: 'Bookings', icon: '📅' },
-  { path: '/ratings', label: 'Ratings', icon: '⭐' },
   { path: '/tax-calculator', label: 'Tax Calculator', icon: '🧮' },
   // { path: '/settings', label: 'Settings', icon: '⚙️' },
 ]

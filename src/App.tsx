@@ -6,12 +6,9 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import TaxSettings from './pages/TaxSettings'
 import Users from './pages/Users'
-import Services from './pages/Services'
-import Categories from './pages/Categories'
-import Bookings from './pages/Bookings'
+import DocumentRequests from './pages/DocumentRequests'
 import SubAdmins from './pages/SubAdmins'
 import Settings from './pages/Settings'
-import Ratings from './pages/Ratings'
 import BookingsManagement from './pages/subAdmin/BookingsManagement'
 import FilesManagement from './pages/subAdmin/FilesManagement'
 import LiveChatSupport from './pages/subAdmin/LiveChatSupport'
@@ -60,13 +57,10 @@ function App() {
         ) : (
           <>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/document-requests" element={<DocumentRequests />} />
             <Route path="/tax-settings" element={<TaxSettings />} />
             <Route path="/users" element={<Users />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/bookings" element={<Bookings />} />
             <Route path="/sub-admins" element={<SubAdmins />} />
-            <Route path="/ratings" element={<Ratings />} />
             <Route path="/tax-calculator" element={<TaxCalculatorAdmin />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<Navigate to="/" replace />} />
