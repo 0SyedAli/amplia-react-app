@@ -1,5 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { usersApi, servicesApi, bookingsApi, categoriesApi } from '../lib/api'
+import {
+  Users as UsersIcon,
+  ShieldCheck,
+  Calculator,
+  Calendar,
+  MessageSquare,
+  LogOut
+} from 'lucide-react'
 
 export default function Dashboard() {
   const { data: usersData } = useQuery({
@@ -26,25 +34,25 @@ export default function Dashboard() {
     {
       label: 'Total Users',
       value: usersData?.data?.data?.length || 0,
-      icon: '👥',
+      icon: <Users size={24} className="text-white" />,
       color: 'bg-blue-500',
     },
     {
       label: 'Services',
       value: servicesData?.data?.data?.length || 0,
-      icon: '🛠️',
+      icon: <Wrench size={24} className="text-white" />,
       color: 'bg-green-500',
     },
     {
       label: 'Categories',
       value: categoriesData?.data?.data?.length || 0,
-      icon: '📁',
+      icon: <Folder size={24} className="text-white" />,
       color: 'bg-purple-500',
     },
     {
       label: 'Bookings',
       value: bookingsData?.data?.data?.length || 0,
-      icon: '📅',
+      icon: <Calendar size={24} className="text-white" />,
       color: 'bg-orange-500',
     },
   ]
@@ -58,7 +66,7 @@ export default function Dashboard() {
         {stats.map((stat) => (
           <div key={stat.label} className="card flex items-center">
             <div className={`${stat.color} p-4 rounded-lg mr-4`}>
-              <span className="text-3xl">{stat.icon}</span>
+              {stat.icon}
             </div>
             <div>
               <p className="text-gray-600 text-sm">{stat.label}</p>
@@ -72,19 +80,25 @@ export default function Dashboard() {
       <div className="card">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a href="/tax-settings" className="p-4 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors">
-            <span className="text-2xl mb-2 block">💰</span>
-            <h3 className="font-semibold text-primary-700">Manage Tax Brackets</h3>
+          <a href="/tax-settings" className="p-6 bg-primary-50 rounded-xl hover:bg-primary-100 transition-all duration-300 group border border-primary-100/50">
+            <div className="bg-white w-12 h-12 rounded-lg flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+              <DollarSign size={24} className="text-primary-600" />
+            </div>
+            <h3 className="font-bold text-primary-700 mb-1">Manage Tax Brackets</h3>
             <p className="text-sm text-gray-600">Update US Federal tax brackets</p>
           </a>
-          <a href="/users" className="p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-            <span className="text-2xl mb-2 block">👥</span>
-            <h3 className="font-semibold text-blue-700">Manage Users</h3>
+          <a href="/users" className="p-6 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all duration-300 group border border-blue-100/50">
+            <div className="bg-white w-12 h-12 rounded-lg flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+              <Users size={24} className="text-blue-600" />
+            </div>
+            <h3 className="font-bold text-blue-700 mb-1">Manage Users</h3>
             <p className="text-sm text-gray-600">View and manage user accounts</p>
           </a>
-          <a href="/services" className="p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-            <span className="text-2xl mb-2 block">🛠️</span>
-            <h3 className="font-semibold text-green-700">Manage Services</h3>
+          <a href="/services" className="p-6 bg-green-50 rounded-xl hover:bg-green-100 transition-all duration-300 group border border-green-100/50">
+            <div className="bg-white w-12 h-12 rounded-lg flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+              <Wrench size={24} className="text-green-600" />
+            </div>
+            <h3 className="font-bold text-green-700 mb-1">Manage Services</h3>
             <p className="text-sm text-gray-600">Add or edit available services</p>
           </a>
         </div>
@@ -92,15 +106,21 @@ export default function Dashboard() {
 
       {/* System Info */}
       <div className="card mt-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">System Information</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+          <Activity size={20} className="mr-2 text-primary-500" />
+          System Information
+        </h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-gray-600">API Status</p>
-            <p className="text-green-600 font-semibold">● Online</p>
+            <p className="text-gray-600 text-sm">API Status</p>
+            <div className="flex items-center mt-1">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              <p className="text-green-600 font-semibold text-sm uppercase tracking-wider">Online</p>
+            </div>
           </div>
           <div>
-            <p className="text-gray-600">Last Updated</p>
-            <p className="text-gray-800">{new Date().toLocaleDateString()}</p>
+            <p className="text-gray-600 text-sm">Last Updated</p>
+            <p className="text-gray-800 font-medium mt-1">{new Date().toLocaleDateString()}</p>
           </div>
         </div>
       </div>

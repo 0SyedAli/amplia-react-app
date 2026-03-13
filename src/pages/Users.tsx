@@ -1,6 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
 import { usersApi } from '../lib/api'
+import { 
+  Bell, 
+  Search, 
+  Trash2, 
+  Users as UsersIcon,
+  UserPlus
+} from 'lucide-react'
 
 export default function Users() {
   const queryClient = useQueryClient()
@@ -55,7 +62,7 @@ export default function Users() {
         </div>
         <div className="relative">
           <button className="w-12 h-12 bg-white rounded-full shadow-md flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors">
-            <span className="text-2xl">🔔</span>
+            <Bell size={20} className="text-gray-600" />
             <span className="absolute top-3 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
         </div>
@@ -64,7 +71,9 @@ export default function Users() {
       {/* Search and Action Bar */}
       <div className="flex gap-4 mb-8">
         <div className="relative flex-1">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">🔍</span>
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+            <Search size={20} />
+          </span>
           <input
             type="text"
             placeholder="Search users..."
@@ -72,7 +81,7 @@ export default function Users() {
           />
         </div>
         {/* <button className="btn-primary flex items-center gap-2 px-6">
-          <span className="text-xl">👤+</span>
+          <UserPlus size={20} />
           Add User
         </button> */}
       </div>
@@ -107,7 +116,7 @@ export default function Users() {
                 disabled={deleteMutation.isPending}
                 className="w-full flex items-center justify-center gap-2 py-2.5 text-gray-600 hover:text-red-600 border border-gray-200 rounded-xl transition-all font-semibold text-sm shadow-sm hover:shadow-md bg-white hover:bg-red-50"
               >
-                <span className="text-lg">🗑️</span>
+                <Trash2 size={18} />
                 Delete
               </button>
             </div>
@@ -116,7 +125,9 @@ export default function Users() {
 
         {users.length === 0 && (
           <div className="card text-center py-20 bg-white/50 backdrop-blur-sm">
-            <div className="text-5xl mb-4 text-gray-300">👥</div>
+            <div className="flex justify-center mb-4 text-gray-300">
+              <UsersIcon size={48} />
+            </div>
             <p className="text-gray-500 text-lg font-medium">No users found</p>
           </div>
         )}

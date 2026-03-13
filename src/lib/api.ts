@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = "https://apiforapp.link/Amplia/"
+const API_BASE_URL = "https://megasporic-carolyn-diametrically.ngrok-free.dev/"
 // const API_BASE_URL = "http://localhost:4006/"
 
 const api = axios.create({

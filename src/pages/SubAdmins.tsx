@@ -2,6 +2,14 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
 import { subAdminApi, getImageUrl } from '../lib/api'
+import { 
+    Bell, 
+    Search, 
+    UserPlus, 
+    Pencil, 
+    Trash2, 
+    ShieldCheck 
+} from 'lucide-react'
 
 export default function SubAdmins() {
     const queryClient = useQueryClient()
@@ -141,7 +149,7 @@ export default function SubAdmins() {
                 </div>
                 <div className="relative">
                     <button className="w-12 h-12 bg-white rounded-full shadow-md flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors">
-                        <span className="text-2xl">🔔</span>
+                        <Bell size={20} className="text-gray-600" />
                         <span className="absolute top-3 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
                     </button>
                 </div>
@@ -150,7 +158,9 @@ export default function SubAdmins() {
             {/* Search and Action Bar */}
             <div className="flex gap-4 mb-8">
                 <div className="relative flex-1">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">🔍</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        <Search size={20} />
+                    </span>
                     <input
                         type="text"
                         placeholder="Search sub-admins..."
@@ -161,7 +171,7 @@ export default function SubAdmins() {
                     onClick={() => handleOpenModal()}
                     className="btn-primary flex items-center gap-2 px-6"
                 >
-                    <span className="text-xl">👤+</span>
+                    <UserPlus size={20} />
                     Add Sub Admin
                 </button>
             </div>
@@ -202,7 +212,7 @@ export default function SubAdmins() {
                                 onClick={() => handleOpenModal(admin)}
                                 className="flex-1 flex items-center justify-center gap-2 py-2.5 text-gray-600 hover:text-primary-600 border border-gray-200 rounded-xl transition-all font-semibold text-sm shadow-sm hover:shadow-md bg-white hover:bg-primary-50"
                             >
-                                <span className="text-lg">✏️</span>
+                                <Pencil size={18} />
                                 Edit
                             </button>
                             <button
@@ -210,7 +220,7 @@ export default function SubAdmins() {
                                 disabled={deleteMutation.isPending}
                                 className="flex-1 flex items-center justify-center gap-2 py-2.5 text-gray-600 hover:text-red-600 border border-gray-200 rounded-xl transition-all font-semibold text-sm shadow-sm hover:shadow-md bg-white hover:bg-red-50"
                             >
-                                <span className="text-lg">🗑️</span>
+                                <Trash2 size={18} />
                                 Delete
                             </button>
                         </div>
@@ -219,7 +229,9 @@ export default function SubAdmins() {
 
                 {subAdmins.length === 0 && (
                     <div className="card text-center py-20 bg-white/50 backdrop-blur-sm">
-                        <div className="text-5xl mb-4 text-gray-300">🛡️</div>
+                        <div className="flex justify-center mb-4 text-gray-300">
+                            <ShieldCheck size={48} />
+                        </div>
                         <p className="text-gray-500 text-lg font-medium">No sub-admins found</p>
                     </div>
                 )}

@@ -1,4 +1,16 @@
 import { NavLink, useNavigate } from 'react-router-dom'
+import { 
+  LayoutDashboard, 
+  FileText, 
+  DollarSign, 
+  Users as UsersIcon, 
+  ShieldCheck, 
+  Calculator, 
+  Settings as SettingsIcon,
+  Calendar,
+  MessageSquare,
+  LogOut
+} from 'lucide-react'
 import logo from '../assets/logo.png'
 
 interface LayoutProps {
@@ -8,19 +20,19 @@ interface LayoutProps {
 }
 
 const adminNavItems = [
-  { path: '/', label: 'Dashboard', icon: '📊' },
-  { path: '/document-requests', label: 'Document Requests', icon: '📁' },
-  { path: '/tax-settings', label: 'Tax Settings', icon: '💰' },
-  { path: '/users', label: 'Users', icon: '👥' },
-  { path: '/sub-admins', label: 'Sub Admins', icon: '🛡️' },
-  { path: '/tax-calculator', label: 'Tax Calculator', icon: '🧮' },
-  // { path: '/settings', label: 'Settings', icon: '⚙️' },
+  { path: '/', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
+  { path: '/document-requests', label: 'Document Requests', icon: <FileText size={20} /> },
+  { path: '/tax-settings', label: 'Tax Settings', icon: <DollarSign size={20} /> },
+  { path: '/users', label: 'Users', icon: <UsersIcon size={20} /> },
+  { path: '/sub-admins', label: 'Sub Admins', icon: <ShieldCheck size={20} /> },
+  { path: '/tax-calculator', label: 'Tax Calculator', icon: <Calculator size={20} /> },
+  // { path: '/settings', label: 'Settings', icon: <SettingsIcon size={20} /> },
 ]
 
 const subAdminNavItems = [
-  { path: '/sub-admin/bookings', label: 'Bookings Management', icon: '📅' },
-  { path: '/sub-admin/files', label: 'Files Management', icon: '📁' },
-  { path: '/sub-admin/live-chat', label: 'Live Chat Support', icon: '💬' },
+  { path: '/sub-admin/bookings', label: 'Bookings Management', icon: <Calendar size={20} /> },
+  { path: '/sub-admin/files', label: 'Files Management', icon: <FileText size={20} /> },
+  { path: '/sub-admin/live-chat', label: 'Live Chat Support', icon: <MessageSquare size={20} /> },
 ]
 
 export default function Layout({ children, onLogout, userRole }: LayoutProps) {
@@ -60,7 +72,7 @@ export default function Layout({ children, onLogout, userRole }: LayoutProps) {
             >
               {({ isActive }) => (
                 <>
-                  <span className={`mr-4 text-xl transition-transform duration-300 group-hover:scale-110 ${isActive ? 'scale-105' : ''}`}>
+                  <span className={`mr-4 transition-transform duration-300 group-hover:scale-110 ${isActive ? 'scale-105' : ''}`}>
                     {item.icon}
                   </span>
                   <span className="font-bold text-sm tracking-tight">{item.label}</span>
@@ -75,7 +87,9 @@ export default function Layout({ children, onLogout, userRole }: LayoutProps) {
             onClick={handleLogout}
             className="flex items-center w-full px-6 py-3 text-primary-500 hover:text-red-600 transition-all duration-300 group"
           >
-            <span className="mr-4 text-xl group-hover:rotate-12 transition-transform duration-300">↩️</span>
+            <span className="mr-4 group-hover:rotate-12 transition-transform duration-300">
+              <LogOut size={20} />
+            </span>
             <span className="font-bold text-sm uppercase tracking-wider">Logout</span>
           </button>
         </div>

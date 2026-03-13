@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react'
 import { bookingsApi, filesApi, getImageUrl } from '../lib/api'
 import { toast } from 'react-hot-toast'
+import { 
+    RefreshCw, 
+    FileText, 
+    Eye, 
+    CheckCircle2, 
+    XCircle, 
+    FolderOpen,
+    Upload,
+    Check
+} from 'lucide-react'
 
 interface DocumentRequest {
     _id: string;
@@ -108,9 +118,10 @@ export default function DocumentRequests() {
                 <h1 className="text-3xl font-bold text-gray-800">Document Requests</h1>
                 <button
                     onClick={fetchRequests}
-                    className="p-2 text-primary-600 hover:bg-primary-50 rounded-lg"
+                    className="flex items-center gap-2 p-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors font-semibold"
                 >
-                    🔄 Refresh
+                    <RefreshCw size={18} className={`${loading ? 'animate-spin' : ''}`} />
+                    Refresh
                 </button>
             </div>
 
@@ -170,15 +181,17 @@ export default function DocumentRequests() {
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => handleMarkAllReceived(selectedRequest.files)}
-                                            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition"
+                                            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition"
                                         >
-                                            ✅ Mark All Received
+                                            <CheckCircle2 size={18} />
+                                            Mark All Received
                                         </button>
                                         <button
                                             onClick={() => handlePrepare(selectedRequest._id)}
-                                            className="bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition"
+                                            className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition"
                                         >
-                                            🚀 Start Preparation
+                                            <Check size={18} />
+                                            Start Preparation
                                         </button>
                                     </div>
                                 )}
@@ -188,8 +201,8 @@ export default function DocumentRequests() {
                                 {selectedRequest.files.map((file: any) => (
                                     <div key={file._id} className="border rounded-xl p-4 flex items-center justify-between hover:bg-gray-50 group">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-red-600 text-xl">
-                                                📄
+                                            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+                                                <FileText size={24} />
                                             </div>
                                             <div>
                                                 <p className="font-bold text-gray-900">{file.name}</p>
@@ -217,7 +230,7 @@ export default function DocumentRequests() {
                                                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
                                                 title="View File"
                                             >
-                                                👁️
+                                                <Eye size={18} />
                                             </a>
                                             {file.type !== 'return_doc' && (
                                                 <>
@@ -226,7 +239,7 @@ export default function DocumentRequests() {
                                                         className="p-2 text-green-600 hover:bg-green-50 rounded-lg"
                                                         title="Mark Received"
                                                     >
-                                                        ✅
+                                                        <CheckCircle2 size={18} />
                                                     </button>
                                                     <button
                                                         onClick={() => {
@@ -236,7 +249,7 @@ export default function DocumentRequests() {
                                                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
                                                         title="Reject"
                                                     >
-                                                        ❌
+                                                        <XCircle size={18} />
                                                     </button>
                                                 </>
                                             )}
@@ -255,9 +268,10 @@ export default function DocumentRequests() {
                                         </div>
                                         <button
                                             onClick={() => handlePrepare(selectedRequest._id)}
-                                            className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200"
+                                            className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200"
                                         >
-                                            🚀 Start Preparation
+                                            <Upload size={18} />
+                                            Start Preparation
                                         </button>
                                     </div>
                                 )}
@@ -279,7 +293,9 @@ export default function DocumentRequests() {
                                                         const formData = new FormData();
                                                         formData.append('file', file);
                                                         formData.append('name', 'Tax Return Final');
-                                                        formData.append('year', '2024');
+                                                        // Use the year from the booking's existing user files
+                                                        const userDocYear = selectedRequest.files?.find((f: any) => f.type === 'user_doc')?.year || new Date().getFullYear();
+                                                        formData.append('year', String(userDocYear));
                                                         formData.append('bookingId', selectedRequest._id); // This will push to filedFiles
                                                         formData.append('type', 'return_doc');
                                                         try {
@@ -295,9 +311,10 @@ export default function DocumentRequests() {
                                             />
                                             <button
                                                 onClick={() => document.getElementById('return-upload')?.click()}
-                                                className="bg-purple-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-purple-700 shadow-lg shadow-purple-200"
+                                                className="flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-purple-700 shadow-lg shadow-purple-200"
                                             >
-                                                📤 Upload Return Document
+                                                <Upload size={18} />
+                                                Upload Return Document
                                             </button>
                                         </div>
                                     </div>
@@ -319,9 +336,10 @@ export default function DocumentRequests() {
                                                     toast.error('Operation failed');
                                                 }
                                             }}
-                                            className="bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-200"
+                                            className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-200"
                                         >
-                                            ✅ Confirm Filing Complete
+                                            <Check size={18} />
+                                            Confirm Filing Complete
                                         </button>
                                     </div>
                                 )}
@@ -343,9 +361,10 @@ export default function DocumentRequests() {
                                                     toast.error('Reset failed');
                                                 }
                                             }}
-                                            className="bg-gray-800 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-900"
+                                            className="flex items-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-900"
                                         >
-                                            🔄 Reset Process
+                                            <RefreshCw size={18} />
+                                            Reset Process
                                         </button>
                                     </div>
                                 )}
@@ -380,7 +399,7 @@ export default function DocumentRequests() {
                         </div>
                     ) : (
                         <div className="h-full flex flex-col items-center justify-center text-gray-400 border-2 border-dashed border-gray-200 rounded-3xl p-12">
-                            <span className="text-6xl mb-4">📂</span>
+                            <FolderOpen size={64} className="mb-4 text-gray-300" />
                             <p className="text-xl">Select a request to review documents</p>
                         </div>
                     )}
