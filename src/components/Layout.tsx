@@ -6,7 +6,6 @@ import {
   Users as UsersIcon, 
   ShieldCheck, 
   Calculator, 
-  Settings as SettingsIcon,
   Calendar,
   MessageSquare,
   LogOut

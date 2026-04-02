@@ -5,8 +5,7 @@ import {
   Bell, 
   Search, 
   Trash2, 
-  Users as UsersIcon,
-  UserPlus
+  Users as UsersIcon
 } from 'lucide-react'
 
 export default function Users() {

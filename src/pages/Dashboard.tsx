@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { usersApi, servicesApi, bookingsApi, categoriesApi } from '../lib/api'
 import {
-  Users as UsersIcon,
-  ShieldCheck,
-  Calculator,
+  Users,
+  Wrench,
+  Folder,
   Calendar,
-  MessageSquare,
-  LogOut
+  DollarSign,
+  Activity
 } from 'lucide-react'
 
 export default function Dashboard() {

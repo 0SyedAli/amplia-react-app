@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = "https://megasporic-carolyn-diametrically.ngrok-free.dev/"
+const API_BASE_URL = "https://apiforapp.link/Amplia/"
 // const API_BASE_URL = "http://localhost:4006/"
 
 const api = axios.create({
@@ -38,7 +38,7 @@ api.interceptors.response.use(
 );
 
 
-export const IMAGE_BASE_URL = "https://megasporic-carolyn-diametrically.ngrok-free.dev/uploads/";
+export const IMAGE_BASE_URL = "https://apiforapp.link/Amplia/uploads/";
 
 export const getImageUrl = (filename: string, type: 'cover' | 'icon' | 'profile' | 'file' | 'media') => {
   if (!filename) return '';
