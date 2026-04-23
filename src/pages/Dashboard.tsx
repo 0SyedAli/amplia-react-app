@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { usersApi, servicesApi, bookingsApi, categoriesApi } from '../lib/api'
 import {
   Users,
+  Calendar,
   Wrench,
   Folder,
-  Calendar,
   DollarSign,
   Activity
 } from 'lucide-react'

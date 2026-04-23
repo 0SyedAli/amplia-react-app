@@ -77,14 +77,18 @@ export default function BookingsManagement() {
 
             switch (tab) {
                 case 'new':
-                    // Show all unassigned bookings that are not completed or cancelled
+                    // Show all unassigned bookings that are not in final states
                     return (!b.assignedTo || b.assignedTo === null) &&
                         b.status !== 'completed' &&
                         b.status !== 'cancelled'
                 case 'scheduled':
                     return isAssignedToMe && b.status === 'scheduled'
                 case 'active':
-                    return isAssignedToMe && b.status === 'active'
+                    // Show everything assigned to me that is in progress
+                    return isAssignedToMe && 
+                        b.status !== 'completed' && 
+                        b.status !== 'cancelled' &&
+                        b.status !== 'scheduled'
                 case 'history':
                     return isAssignedToMe && (b.status === 'completed' || b.status === 'cancelled')
                 default:
@@ -109,6 +113,16 @@ export default function BookingsManagement() {
                 return 'bg-purple-100 text-purple-800'
             case 'new':
                 return 'bg-blue-50 text-blue-600'
+            case 'approved':
+                return 'bg-green-100 text-green-600'
+            case 'filed':
+                return 'bg-emerald-100 text-emerald-800'
+            case 'sent':
+                return 'bg-orange-50 text-orange-600'
+            case 'preparation':
+                return 'bg-purple-50 text-purple-600'
+            case 'review':
+                return 'bg-indigo-50 text-indigo-600'
             default:
                 return 'bg-gray-100 text-gray-800'
         }
@@ -207,7 +221,7 @@ export default function BookingsManagement() {
                                                     </svg>
                                                     Chat
                                                 </button>
-                                                {(booking.status === 'active' || booking.status === 'scheduled') && (
+                                                {(booking.status !== 'completed' && booking.status !== 'cancelled') && (
                                                     <button
                                                         onClick={() => {
                                                             if (confirm('Are you sure you want to mark this booking as completed?')) {
