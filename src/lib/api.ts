@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = "https://apiforapp.link/Amplia"
+// const API_BASE_URL = "https://stylitic-senselessly-olene.ngrok-free.dev"
 // const API_BASE_URL = "http://localhost:4006/"
+const API_BASE_URL = "https://apiforapp.link/Amplia/"
+
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,6 +11,7 @@ const api = axios.create({
     'ngrok-skip-browser-warning': 'true'
   }
 });
+
 
 // Add auth token to requests
 api.interceptors.request.use((config) => {
@@ -35,6 +38,7 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export const IMAGE_BASE_URL = "https://megasporic-carolyn-diametrically.ngrok-free.dev/uploads/";
 

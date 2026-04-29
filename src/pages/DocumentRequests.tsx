@@ -38,13 +38,22 @@ export default function DocumentRequests() {
         fetchRequests()
     }, [])
 
+    useEffect(() => {
+        if (selectedRequest) {
+            const updated = requests.find(r => r._id === selectedRequest._id);
+            if (updated) {
+                setSelectedRequest(updated);
+            }
+        }
+    }, [requests]);
+
     const fetchRequests = async () => {
         try {
             setLoading(true)
             const res = await bookingsApi.getAll()
             const allBookings = res.data.bookings || []
 
-            const targetStatuses = ['in_start', 'sent', 'received', 'preparation', 'review', 'approved', 'filed']
+            const targetStatuses = ['in_start', 'sent', 'received', 'payment_pending', 'preparation', 'review', 'approved', 'filed']
             const filteredBookings = allBookings.filter((b: any) =>
                 targetStatuses.includes(b.status) && b.filedFiles && b.filedFiles.length > 0
             )
@@ -61,10 +70,10 @@ export default function DocumentRequests() {
         }
     }
 
-    const handleMarkReceived = async (fileId: string) => {
+    const handleApprove = async (fileId: string) => {
         try {
-            await filesApi.update(fileId, { status: 'received' })
-            toast.success('Document marked as received')
+            await filesApi.update(fileId, { status: 'approved' })
+            toast.success('Document approved')
             fetchRequests()
         } catch (error) {
             toast.error('Failed to update document status')
@@ -90,27 +99,29 @@ export default function DocumentRequests() {
         }
     }
 
-    const handleMarkAllReceived = async (files: any[]) => {
+    const handleApproveAll = async (files: any[]) => {
         try {
             await Promise.all(files.map(file =>
-                filesApi.update(file._id, { status: 'received' })
+                filesApi.update(file._id, { status: 'approved' })
             ))
-            toast.success('All documents marked as received')
+            toast.success('All documents approved')
             fetchRequests()
         } catch (error) {
             toast.error('Failed to update some documents')
         }
     }
 
-    const handlePrepare = async (bookingId: string) => {
+    const handleProceedToPayment = async (bookingId: string) => {
         try {
-            await bookingsApi.update(bookingId, { status: 'preparation' })
-            toast.success('Booking moved to Preparation stage')
+            await bookingsApi.update(bookingId, { status: 'payment_pending' })
+            toast.success('Booking moved to Payment stage')
             fetchRequests()
         } catch (error) {
             toast.error('Failed to update booking status')
         }
     }
+
+
 
     return (
         <div className="space-y-6">
@@ -177,21 +188,21 @@ export default function DocumentRequests() {
                                     </h2>
                                     <p className="text-gray-500">{selectedRequest.user?.email}</p>
                                 </div>
-                                {selectedRequest.status !== 'preparation' && (
+                                {selectedRequest.status === 'sent' && (
                                     <div className="flex gap-2">
                                         <button
-                                            onClick={() => handleMarkAllReceived(selectedRequest.files)}
+                                            onClick={() => handleApproveAll(selectedRequest.files)}
                                             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition"
                                         >
                                             <CheckCircle2 size={18} />
-                                            Mark All Received
+                                            Approve All
                                         </button>
                                         <button
-                                            onClick={() => handlePrepare(selectedRequest._id)}
+                                            onClick={() => handleProceedToPayment(selectedRequest._id)}
                                             className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition"
                                         >
                                             <Check size={18} />
-                                            Start Preparation
+                                            Proceed to Payment
                                         </button>
                                     </div>
                                 )}
@@ -208,10 +219,10 @@ export default function DocumentRequests() {
                                                 <p className="font-bold text-gray-900">{file.name}</p>
                                                 <p className="text-sm text-gray-500">Year: {file.year} • {new Date(file.createdAt).toLocaleDateString()}</p>
                                                 <div className="mt-1 flex items-center gap-2">
-                                                    <span className={`text-xs px-2 py-0.5 rounded-full ${file.status === 'received' ? 'bg-green-100 text-green-800' :
+                                                    <span className={`text-xs px-2 py-0.5 rounded-full ${file.status === 'approved' || file.status === 'received' ? 'bg-green-100 text-green-800' :
                                                         file.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
                                                         }`}>
-                                                        {file.status || 'sent'}
+                                                        {file.status === 'received' ? 'Approved' : (file.status || 'sent')}
                                                     </span>
                                                     {file.type === 'return_doc' && (
                                                         <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Return Doc</span>
@@ -235,9 +246,9 @@ export default function DocumentRequests() {
                                             {file.type !== 'return_doc' && (
                                                 <>
                                                     <button
-                                                        onClick={() => handleMarkReceived(file._id)}
+                                                        onClick={() => handleApprove(file._id)}
                                                         className="p-2 text-green-600 hover:bg-green-50 rounded-lg"
-                                                        title="Mark Received"
+                                                        title="Approve"
                                                     >
                                                         <CheckCircle2 size={18} />
                                                     </button>
@@ -260,19 +271,31 @@ export default function DocumentRequests() {
 
                             {/* Action Stage Logic */}
                             <div className="mt-8 pt-6 border-t">
-                                {selectedRequest.status === 'received' && (
+                                {selectedRequest.status === 'sent' && (
                                     <div className="bg-blue-50 p-6 rounded-2xl flex items-center justify-between">
                                         <div>
-                                            <h3 className="text-lg font-bold text-blue-900">Documents Verified</h3>
-                                            <p className="text-blue-700">All documents are in order. Start the tax preparation phase.</p>
+                                            <h3 className="text-lg font-bold text-blue-900">Documents Received</h3>
+                                            <p className="text-blue-700">Review and approve documents to proceed to payment.</p>
                                         </div>
                                         <button
-                                            onClick={() => handlePrepare(selectedRequest._id)}
+                                            onClick={() => handleApproveAll(selectedRequest.files)}
                                             className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200"
                                         >
-                                            <Upload size={18} />
-                                            Start Preparation
+                                            <CheckCircle2 size={18} />
+                                            Approve All Documents
                                         </button>
+                                    </div>
+                                )}
+
+                                {selectedRequest.status === 'payment_pending' && (
+                                    <div className="bg-yellow-50 p-6 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <h3 className="text-lg font-bold text-yellow-900">Payment Pending</h3>
+                                            <p className="text-yellow-700">Waiting for user to complete the payment for this return.</p>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-yellow-600">
+                                            <RefreshCw size={24} className="animate-spin" />
+                                        </div>
                                     </div>
                                 )}
 
