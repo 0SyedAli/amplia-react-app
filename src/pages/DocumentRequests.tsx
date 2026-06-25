@@ -33,6 +33,7 @@ export default function DocumentRequests() {
     const [rejectionReason, setRejectionReason] = useState('')
     const [isRejecting, setIsRejecting] = useState(false)
     const [selectedFile, setSelectedFile] = useState<any>(null)
+    const [postFileName, setPostFileName] = useState('Post-Filing Signature Form')
 
     useEffect(() => {
         fetchRequests()
@@ -219,11 +220,23 @@ export default function DocumentRequests() {
                                                 <p className="font-bold text-gray-900">{file.name}</p>
                                                 <p className="text-sm text-gray-500">Year: {file.year} • {new Date(file.createdAt).toLocaleDateString()}</p>
                                                 <div className="mt-1 flex items-center gap-2">
-                                                    <span className={`text-xs px-2 py-0.5 rounded-full ${file.status === 'approved' || file.status === 'received' ? 'bg-green-100 text-green-800' :
-                                                        file.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
-                                                        }`}>
-                                                        {file.status === 'received' ? 'Approved' : (file.status || 'sent')}
-                                                    </span>
+                                                    {file.type !== 'signature_request' && (
+                                                        <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                                            file.status === 'approved' || file.status === 'received' || file.status === 'signed' ? 'bg-green-100 text-green-800' :
+                                                            file.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+                                                            }`}>
+                                                            {file.status === 'received' ? 'Approved' : (file.status || 'sent')}
+                                                        </span>
+                                                    )}
+                                                    {file.type === 'signature_request' && (
+                                                        <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
+                                                            file.status === 'signed' 
+                                                                ? 'bg-green-100 text-green-800' 
+                                                                : 'bg-orange-100 text-orange-800'
+                                                            }`}>
+                                                            {file.status === 'signed' ? '✓ Signed' : '✍ Signature Pending'}
+                                                        </span>
+                                                    )}
                                                     {file.type === 'return_doc' && (
                                                         <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Return Doc</span>
                                                     )}
@@ -232,6 +245,15 @@ export default function DocumentRequests() {
                                                     )}
                                                 </div>
                                             </div>
+                                            {file.status === 'signed' && file.signaturePaths && file.signaturePaths.length > 0 && (
+                                                <div className="w-20 h-10 border border-gray-200 bg-gray-50 rounded flex items-center justify-center p-1 overflow-hidden ml-2 shadow-sm" title="Signature Thumbnail">
+                                                    <svg className="w-full h-full" viewBox="0 0 320 180">
+                                                        {file.signaturePaths.map((p: string, idx: number) => (
+                                                            <path key={idx} d={p} stroke="#003846" strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                                        ))}
+                                                    </svg>
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -368,27 +390,95 @@ export default function DocumentRequests() {
                                 )}
 
                                 {selectedRequest.status === 'filed' && (
-                                    <div className="bg-gray-100 p-6 rounded-2xl flex items-center justify-between">
-                                        <div>
-                                            <h3 className="text-lg font-bold text-gray-900">Filing Completed</h3>
-                                            <p className="text-gray-700">The process is finished. Reset for next year/session?</p>
+                                    <div className="space-y-6">
+                                        {/* Reset Card */}
+                                        <div className="bg-gray-100 p-6 rounded-2xl flex items-center justify-between">
+                                            <div>
+                                                <h3 className="text-lg font-bold text-gray-900">Filing Completed</h3>
+                                                <p className="text-gray-700">The process is finished. Reset for next year/session?</p>
+                                            </div>
+                                            <button
+                                                onClick={async () => {
+                                                    try {
+                                                        await bookingsApi.update(selectedRequest._id, { status: 'new' });
+                                                        toast.success('Process reset successfully');
+                                                        fetchRequests();
+                                                        setSelectedRequest(null);
+                                                    } catch (err) {
+                                                        toast.error('Reset failed');
+                                                    }
+                                                }}
+                                                className="flex items-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-900 shadow-md transition-all"
+                                            >
+                                                <RefreshCw size={18} />
+                                                Reset Process
+                                            </button>
                                         </div>
-                                        <button
-                                            onClick={async () => {
-                                                try {
-                                                    await bookingsApi.update(selectedRequest._id, { status: 'new' });
-                                                    toast.success('Process reset successfully');
-                                                    fetchRequests();
-                                                    setSelectedRequest(null);
-                                                } catch (err) {
-                                                    toast.error('Reset failed');
-                                                }
-                                            }}
-                                            className="flex items-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-900"
-                                        >
-                                            <RefreshCw size={18} />
-                                            Reset Process
-                                        </button>
+
+                                        {/* Send Form for Signature Card */}
+                                        <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100 space-y-4">
+                                            <div>
+                                                <h3 className="text-lg font-bold text-blue-900">Send Form for Touchscreen Signature</h3>
+                                                <p className="text-blue-700">Upload a PDF form. The customer can review it and sign it on their touchscreen device.</p>
+                                            </div>
+
+                                            <div className="flex flex-col md:flex-row gap-4 items-end">
+                                                <div className="flex-1 w-full space-y-2">
+                                                    <label className="text-xs font-semibold text-blue-800 uppercase tracking-wider">Form Name</label>
+                                                    <input
+                                                        type="text"
+                                                        value={postFileName}
+                                                        onChange={(e) => setPostFileName(e.target.value)}
+                                                        placeholder="e.g. Tax Filing Sign-Off Form"
+                                                        className="w-full px-4 py-2.5 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800"
+                                                    />
+                                                </div>
+                                                <div className="w-full md:w-auto flex gap-3">
+                                                    <input
+                                                        type="file"
+                                                        id="post-file-upload"
+                                                        className="hidden"
+                                                        accept=".pdf"
+                                                        onChange={async (e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (!file) return;
+
+                                                            const name = postFileName.trim() || file.name.replace(/\.[^/.]+$/, "");
+
+                                                            const formData = new FormData();
+                                                            formData.append('file', file);
+                                                            formData.append('name', name);
+                                                            
+                                                            const userDocYear = selectedRequest.files?.find((f: any) => f.type === 'user_doc')?.year || new Date().getFullYear();
+                                                            formData.append('year', String(userDocYear));
+                                                            formData.append('bookingId', selectedRequest._id);
+                                                            formData.append('type', 'signature_request');
+
+                                                            try {
+                                                                toast.loading('Uploading form...', { id: 'uploading-post-form' });
+                                                                await filesApi.upload(formData);
+                                                                toast.success('Signature form sent successfully!', { id: 'uploading-post-form' });
+                                                                
+                                                                // Reset form name state
+                                                                setPostFileName('Post-Filing Signature Form');
+                                                                // Clear file input
+                                                                e.target.value = '';
+                                                                fetchRequests();
+                                                            } catch (err) {
+                                                                toast.error('Failed to send signature form', { id: 'uploading-post-form' });
+                                                            }
+                                                        }}
+                                                    />
+                                                    <button
+                                                        onClick={() => document.getElementById('post-file-upload')?.click()}
+                                                        className="w-full md:w-auto flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all"
+                                                    >
+                                                        <Upload size={18} />
+                                                        Choose & Send Form
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                             </div>

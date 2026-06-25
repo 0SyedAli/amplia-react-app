@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { chatApi } from '../lib/api';
+import { chatApi, API_BASE_URL } from '../lib/api';
 import { toast } from 'react-hot-toast';
 
 interface LiveChatModalProps {
@@ -23,7 +23,7 @@ interface Message {
     seen: boolean;
 }
 
-const SOCKET_URL = "https://apiforapp.link";
+const SOCKET_URL = API_BASE_URL;
 
 export default function LiveChatModal({ isOpen, onClose, chatId, isReadOnly = false }: LiveChatModalProps) {
     const [messages, setMessages] = useState<Message[]>([]);

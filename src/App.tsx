@@ -51,7 +51,7 @@ function App() {
           <>
             <Route path="/sub-admin/bookings" element={<BookingsManagement />} />
             <Route path="/sub-admin/files" element={<FilesManagement />} />
-            <Route path="/sub-admin/live-chat" element={<LiveChatSupport />} />
+            <Route path="/live-chat" element={<LiveChatSupport />} />
             <Route path="*" element={<Navigate to="/sub-admin/bookings" replace />} />
           </>
         ) : (
@@ -63,6 +63,7 @@ function App() {
             <Route path="/sub-admins" element={<SubAdmins />} />
             <Route path="/tax-calculator" element={<TaxCalculatorAdmin />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/live-chat" element={<LiveChatSupport />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}

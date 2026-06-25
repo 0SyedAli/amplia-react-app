@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { chatApi } from '../lib/api';
+import { chatApi, API_BASE_URL } from '../lib/api';
 import { toast } from 'react-hot-toast';
 
 interface ChatModalProps {
@@ -50,7 +50,7 @@ export default function ChatModal({ isOpen, onClose, bookingId, bookingDetails, 
                     setMessages(chat.messages || []);
 
                     // Initialize Socket
-                    currentSocket = io("https://apiforapp.link", {
+                    currentSocket = io(API_BASE_URL, {
                         path: "/socket.io",
                         transports: ["websocket"],
                     });

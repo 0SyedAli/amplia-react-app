@@ -1,16 +1,15 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useState, useEffect, useRef } from 'react';
-import { chatApi } from '../../lib/api';
+import { chatApi, API_BASE_URL } from '../../lib/api';
 import { io, Socket } from 'socket.io-client';
 import LiveChatModal from '../../components/LiveChatModal';
-
-const API_BASE_URL = "https://apiforapp.link";
 
 export default function LiveChatSupport() {
     const [selectedChat, setSelectedChat] = useState<any>(null);
     const [isChatModalOpen, setIsChatModalOpen] = useState(false);
     const socketRef = useRef<Socket | null>(null);
     const currentSubAdminId = localStorage.getItem('userId');
+    const currentAdminRole = localStorage.getItem('adminRole');
 
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['liveChats'],
@@ -143,9 +142,9 @@ export default function LiveChatSupport() {
                         </thead>
                         <tbody>
                             {liveChats.map((chat: any) => {
-                                const activeSubAdminId = typeof chat.activeSubAdmin === 'object' ? chat.activeSubAdmin?._id : chat.activeSubAdmin;
+                                const activeSubAdminId = typeof chat.admin === 'object' ? chat.admin?._id : chat.admin;
                                 const isOwner = activeSubAdminId === currentSubAdminId;
-                                const isLocked = chat.activeSubAdmin && !isOwner;
+                                const isLocked = chat.admin && !isOwner && currentAdminRole !== 'superAdmin';
 
                                 return (
                                     <tr key={chat._id} className="border-b hover:bg-gray-50">
@@ -161,12 +160,12 @@ export default function LiveChatSupport() {
                                             </span>
                                         </td>
                                         <td className="p-3 text-sm text-gray-600">
-                                            {chat.activeSubAdmin ? (
+                                            {chat.admin ? (
                                                 <div className="flex items-center">
                                                     <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2 ${isOwner ? 'bg-green-100 text-green-600' : 'bg-primary-100 text-primary-600'}`}>
-                                                        {chat.activeSubAdmin.firstName?.[0] || 'A'}
+                                                        {chat.admin.firstName?.[0] || 'A'}
                                                     </span>
-                                                    {chat.activeSubAdmin.firstName} {chat.activeSubAdmin.lastName}
+                                                    {chat.admin.firstName} {chat.admin.lastName}
                                                     {isOwner && <span className="ml-2 text-xs text-green-600">(You)</span>}
                                                 </div>
                                             ) : (
@@ -237,7 +236,8 @@ export default function LiveChatSupport() {
                     }}
                     chatId={selectedChat._id}
                     isReadOnly={(() => {
-                        const activeSubAdminId = typeof selectedChat.activeSubAdmin === 'object' ? selectedChat.activeSubAdmin?._id : selectedChat.activeSubAdmin;
+                        if (currentAdminRole === 'superAdmin') return false; // superAdmin is never read-only
+                        const activeSubAdminId = typeof selectedChat.admin === 'object' ? selectedChat.admin?._id : selectedChat.admin;
                         return !!activeSubAdminId && activeSubAdminId !== currentSubAdminId;
                     })()}
                 />

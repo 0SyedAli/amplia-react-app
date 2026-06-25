@@ -15,6 +15,7 @@ export default function BookingFilesModal({ isOpen, onClose, bookingId }: Bookin
     const [newFileName, setNewFileName] = useState('')
     const [newFileYear, setNewFileYear] = useState(new Date().getFullYear().toString())
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [requiresSignature, setRequiresSignature] = useState(false)
 
     useEffect(() => {
         if (isOpen && bookingId) {
@@ -61,6 +62,7 @@ export default function BookingFilesModal({ isOpen, onClose, bookingId }: Bookin
             formData.append('name', newFileName)
             formData.append('year', newFileYear)
             formData.append('bookingId', bookingId)
+            formData.append('type', requiresSignature ? 'signature_request' : 'user_doc')
 
             await filesApi.upload(formData)
             toast.success('File uploaded successfully')
@@ -68,6 +70,7 @@ export default function BookingFilesModal({ isOpen, onClose, bookingId }: Bookin
             // Reset form
             setNewFileName('')
             setSelectedFile(null)
+            setRequiresSignature(false)
             // Refresh list
             fetchFiles()
         } catch (error: any) {
@@ -139,6 +142,18 @@ export default function BookingFilesModal({ isOpen, onClose, bookingId }: Bookin
                                             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-2 border"
                                         />
                                     </div>
+                                    <div className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            id="requiresSignature"
+                                            checked={requiresSignature}
+                                            onChange={(e) => setRequiresSignature(e.target.checked)}
+                                            className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                        />
+                                        <label htmlFor="requiresSignature" className="ml-2 text-sm text-gray-700 font-medium select-none">
+                                            Requires customer signature
+                                        </label>
+                                    </div>
                                     <div className="flex items-center gap-3">
                                         <input
                                             type="file"
@@ -172,9 +187,18 @@ export default function BookingFilesModal({ isOpen, onClose, bookingId }: Bookin
                                                     <svg className="h-5 w-5 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                                     </svg>
-                                                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
+                                                    <div className="ml-4 flex min-w-0 flex-1 gap-2 items-center">
                                                         <span className="truncate font-medium">{file.name}</span>
                                                         <span className="flex-shrink-0 text-gray-400">({file.year})</span>
+                                                        {file.type === 'signature_request' && (
+                                                            <span className={`ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                                                                file.status === 'signed' 
+                                                                    ? 'bg-green-100 text-green-800' 
+                                                                    : 'bg-orange-100 text-orange-800'
+                                                            }`}>
+                                                                {file.status === 'signed' ? '✓ Signed' : '✍ Signature Pending'}
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="ml-4 flex-shrink-0 flex items-center gap-4">

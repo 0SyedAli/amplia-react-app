@@ -25,13 +25,14 @@ const adminNavItems = [
   { path: '/users', label: 'Users', icon: <UsersIcon size={20} /> },
   { path: '/sub-admins', label: 'Sub Admins', icon: <ShieldCheck size={20} /> },
   { path: '/tax-calculator', label: 'Tax Calculator', icon: <Calculator size={20} /> },
+  { path: '/live-chat', label: 'Live Chat Support', icon: <MessageSquare size={20} /> },
   // { path: '/settings', label: 'Settings', icon: <SettingsIcon size={20} /> },
 ]
 
 const subAdminNavItems = [
   { path: '/sub-admin/bookings', label: 'Bookings Management', icon: <Calendar size={20} /> },
   { path: '/sub-admin/files', label: 'Files Management', icon: <FileText size={20} /> },
-  { path: '/sub-admin/live-chat', label: 'Live Chat Support', icon: <MessageSquare size={20} /> },
+  { path: '/live-chat', label: 'Live Chat Support', icon: <MessageSquare size={20} /> },
 ]
 
 export default function Layout({ children, onLogout, userRole }: LayoutProps) {
